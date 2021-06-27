@@ -10,8 +10,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,17 +20,14 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -46,8 +41,7 @@ public class PhysicianAccount extends JFrame implements java.util.Observer {
 
     public static JPanel panel;
     public static JTable allTreatmentsTable;
-    public static JLabel msg;
-    public static Set<Treatment> allTreatments = new HashSet<Treatment>();
+    public static Set<Treatment> allTreatments = new HashSet<>();
     public static Physician loggedInPhysician;
     public static MyTreatmentsPanel myTreatmentsPanel;
     public static PhysicianMainPanel mainPanel;
@@ -66,7 +60,7 @@ public class PhysicianAccount extends JFrame implements java.util.Observer {
             }
         });
 
-        setSize(600, 400);
+        setSize(800, 600);
 
         this.allTreatments = Account.allBookedTreatments;
 
@@ -87,48 +81,28 @@ public class PhysicianAccount extends JFrame implements java.util.Observer {
         panel.add(allapptsPanel, "appointments");
         panel.add(myapptsPanel, "my-Appointments");
 
-        /**Menu
-         */
+        /**Menu*/
+
         JMenuBar mb = new JMenuBar();
         setJMenuBar(mb);
         JMenu lookup = new JMenu("All Treatments");
         JMenuItem mainItem = new JMenuItem ("Browse treatments");
-        mainItem.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cl.show(panel,"lookup");
-            }
-        });
+        mainItem.addActionListener(e -> cl.show(panel,"lookup"));
         lookup.add(mainItem);
         mb.add(lookup);
 
         JMenu bookings = new JMenu("My Treatments");
         JMenuItem bookingItem = new JMenuItem ("Treatments with registered students");
-        bookingItem.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cl.show(panel,"myTreatments");
-            }
-        });
+        bookingItem.addActionListener(e -> cl.show(panel,"myTreatments"));
         bookings.add(bookingItem);
         mb.add(bookings);
 
         JMenu appointments = new JMenu("Appointments");
         JMenuItem apptsItem = new JMenuItem ("All appointments");
-        apptsItem.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cl.show(panel,"appointments");
-            }
-        });
+        apptsItem.addActionListener(e -> cl.show(panel,"appointments"));
 
         JMenuItem myapptsItem = new JMenuItem ("My appointments");
-        myapptsItem.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cl.show(panel,"My-appointments");
-            }
-        });
+        myapptsItem.addActionListener(e -> cl.show(panel,"My-appointments"));
         appointments.add(apptsItem);
         appointments.add(myapptsItem);
         mb.add(appointments);
@@ -181,7 +155,7 @@ class PhysicianMainPanel extends JPanel {
         };
 
         allTreatmentsTable = new JTable(model);
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
         allTreatmentsTable.setRowSorter(sorter);
 
         JScrollPane sp = new JScrollPane(allTreatmentsTable);
@@ -229,31 +203,28 @@ class MyTreatmentsPanel extends JPanel {
                 JButton cancelButton = new JButton("cancel");
                 bookedItem.add(cancelButton);
 
-                cancelButton.addActionListener(new ActionListener(){
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        JButton button = (JButton)e.getSource();
-                        JPanel visitorPanel = (JPanel)button.getParent();
-                        Component[] components = visitorPanel.getComponents();
-                        JLabel l = (JLabel)components[0];
-                        int lessonId = Integer.parseInt(l.getText());
-                        Treatment lessonToCancel = null;
+                cancelButton.addActionListener(e -> {
+                    JButton button = (JButton)e.getSource();
+                    JPanel visitorPanel = (JPanel)button.getParent();
+                    Component[] components = visitorPanel.getComponents();
+                    JLabel l = (JLabel)components[0];
+                    int lessonId1 = Integer.parseInt(l.getText());
+                    Treatment lessonToCancel = null;
 
-                        for (Treatment lesson : Account.allBookedTreatments) {
-                            if(lesson.id == lessonId){
-                                lessonToCancel = lesson;
-                            }
+                    for (Treatment lesson1 : Account.allBookedTreatments) {
+                        if(lesson1.id == lessonId1){
+                            lessonToCancel = lesson1;
                         }
-                        Account.allBookedTreatments.remove(lessonToCancel);
-                        for(Patient s: lesson.registeredPatients){
-                            s.cancelTreatment(lessonToCancel);
-                        }
-                        visitorPanel.removeAll();
-                        visitorPanel.revalidate();
-                        visitorPanel.repaint();
-                        mainPanel = new PhysicianMainPanel();
-                        panel.add(mainPanel, "lookup");
                     }
+                    Account.allBookedTreatments.remove(lessonToCancel);
+                    for(Patient s: lesson.registeredPatients){
+                        s.cancelTreatment(lessonToCancel);
+                    }
+                    visitorPanel.removeAll();
+                    visitorPanel.revalidate();
+                    visitorPanel.repaint();
+                    mainPanel = new PhysicianMainPanel();
+                    panel.add(mainPanel, "lookup");
                 });
 
 
@@ -269,12 +240,8 @@ class MyTreatmentsPanel extends JPanel {
 }
 
 class PhysicianAppointmentsPanel extends JPanel {
-    JList physiciansList;
     JTable table;
-    JLabel appointmentMsg;
     Map<String, Physician> physicians;
-    JTextField visitorText;
-    JComboBox datesList;
 
     public PhysicianAppointmentsPanel (){
         super();
@@ -351,21 +318,18 @@ class MyAppointmentsPanel extends JPanel {
             JButton cancelButton = new JButton("cancel");
             appointmentItem.add(cancelButton);
 
-            cancelButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JButton button = (JButton) e.getSource();
-                    JPanel panel = (JPanel) button.getParent();
-                    Component[] components = panel.getComponents();
-                    JLabel l = (JLabel) components[0];
-                    int id = Integer.parseInt(l.getText());
-                    loggedInPhysician.cancelAppointment(id);
+            cancelButton.addActionListener(e -> {
+                JButton button = (JButton) e.getSource();
+                JPanel panel = (JPanel) button.getParent();
+                Component[] components = panel.getComponents();
+                JLabel l = (JLabel) components[0];
+                int id = Integer.parseInt(l.getText());
+                loggedInPhysician.cancelAppointment(id);
 
-                    panel.removeAll();
-                    panel.revalidate();
-                    panel.repaint();
+                panel.removeAll();
+                panel.revalidate();
+                panel.repaint();
 
-                }
             });
 
             bookedTreatments.add(appointmentItem);

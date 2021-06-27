@@ -35,7 +35,7 @@ public class Physician extends Person{
         this.area = area;
         appointmentDay = DayOfWeek.Monday;
         appointmentHr = 19;
-        appointments = new ArrayList<Appointment>();
+        appointments = new ArrayList<>();
     }
 
     String bookAppointment(Date date, int hrs, int mins, String visitor){

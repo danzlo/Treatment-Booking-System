@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
@@ -21,8 +20,8 @@ import javax.swing.*;
 
     public class Login extends JFrame {
 
-        public static Set<Person> persons = new HashSet<Person>();
-        public static Set<Treatment> treatments = new HashSet<Treatment>();
+        public static Set<Person> persons = new HashSet<>();
+        public static Set<Treatment> treatments = new HashSet<>();
 
         JTextField idText;
         JLabel loginMsg;
@@ -108,38 +107,36 @@ import javax.swing.*;
             phoneNumberText = new JTextField();
             textFieldPanel.add(phoneNumberText);
 
-            checkbox = new JCheckBox("I'm a physician");
-            checkbox.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    if(e.getStateChange() == ItemEvent.SELECTED){
+            checkbox = new JCheckBox("I am a physician");
+            checkbox.addItemListener(e -> {
+                if(e.getStateChange() == ItemEvent.SELECTED){
 
-                        areaLabel = new JLabel("Area of expertise: ");
-                        Area areas[]= {Area.Physiotherapy, Area.Osteopathy, Area.Rehabilitation};
-                        areaCombo = new JComboBox(areas);
-                        areaCombo.setSelectedIndex(2);
-                        areaCombo.setAlignmentX(0);
+                    areaLabel = new JLabel("Area of expertise: ");
+                    Area areas[]= {Area.Physiotherapy, Area.Osteopathy, Area.Rehabilitation};
+                    areaCombo = new JComboBox(areas);
+                    areaCombo.setSelectedIndex(2);
+                    areaCombo.setAlignmentX(0);
 
-                        innerRegisterPanel.remove(registerButton);
-                        innerRegisterPanel.add(areaLabel);
-                        innerRegisterPanel.add(areaCombo);
-                        innerRegisterPanel.add(registerButton);
+                    innerRegisterPanel.remove(registerButton);
+                    innerRegisterPanel.add(areaLabel);
+                    innerRegisterPanel.add(areaCombo);
+                    innerRegisterPanel.add(registerButton);
 
-                        innerRegisterPanel.revalidate();
-                        innerRegisterPanel.repaint();
-                    }
-                    else {
-                        innerRegisterPanel.remove(areaCombo);
-                        innerRegisterPanel.remove(areaLabel);
-                        innerRegisterPanel.revalidate();
-                        innerRegisterPanel.repaint();
-                    }
+                    innerRegisterPanel.revalidate();
+                    innerRegisterPanel.repaint();
+                }
+                else {
+                    innerRegisterPanel.remove(areaCombo);
+                    innerRegisterPanel.remove(areaLabel);
+                    innerRegisterPanel.revalidate();
+                    innerRegisterPanel.repaint();
                 }
             });
 
             textFieldPanel.add(checkbox);
 
             registrationMsg = new JLabel("");
+
             registrationMsg.setForeground(Color.RED);
             textFieldPanel.add(registrationMsg);
 
@@ -168,12 +165,7 @@ import javax.swing.*;
                 }
             });
 
-            switchToLogin.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    cl.show(panel, "Login");
-                }
-            });
+            switchToLogin.addActionListener(e -> cl.show(panel, "Login"));
 
             cl.show(panel, "1");
 
@@ -181,7 +173,7 @@ import javax.swing.*;
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             add(panel);
 
-            SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm", Locale.ENGLISH);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm", Locale.ENGLISH);
             try {
 
                 /**HARD CODED DATA*/
@@ -228,45 +220,45 @@ import javax.swing.*;
                 persons.add(physician6);
 
 
-                Treatment treatment1 = new Treatment(1, "Massage", "Rehabilitation", "Liz Taylor", "Medical consulting suite A", formatter.parse("03-06-2021 10:00"), 1);
+                Treatment treatment1 = new Treatment(1, "Massage", "Rehabilitation", "Liz Taylor", "Medical consulting suite A", formatter.parse("07-06-2021 10:00"), 1);
                 treatment1.timeTable.put(DayOfWeek.Monday, 10);
-                Treatment treatment2 = new Treatment(2, "Neural mobilisation", "Physiotherapy", "Adam Lever", "Medical consulting suite B", formatter.parse("03-06-2021 13:00"), 1);
+                Treatment treatment2 = new Treatment(2, "Neural mobilisation", "Physiotherapy", "Adam Lever", "Medical consulting suite B", formatter.parse("07-06-2021 13:00"), 1);
                 treatment2.timeTable.put(DayOfWeek.Monday, 13);
-                Treatment treatment3 =new Treatment(3, "Acupuncture", "Osteopathy", "Tony Stanton", "Medical consulting suite C", formatter.parse("04-06-2021 11:00"), 1);
+                Treatment treatment3 =new Treatment(3, "Acupuncture", "Osteopathy", "Tony Stanton", "Medical consulting suite C", formatter.parse("08-06-2021 11:00"), 1);
                 treatment3.timeTable.put(DayOfWeek.Tuesday, 11);
-                Treatment treatment4 = new Treatment(4, "Mobilisation of the spine and joints", "Physiotherapy", "Tim Sawyer", "Medical consulting suite B", formatter.parse("04-06-2021 14:00"), 1);
+                Treatment treatment4 = new Treatment(4, "Mobilisation of the spine and joints", "Physiotherapy", "Tim Sawyer", "Medical consulting suite B", formatter.parse("08-06-2021 14:00"), 1);
                 treatment4.timeTable.put(DayOfWeek.Tuesday, 14);
-                Treatment treatment5 = new Treatment(5, "Pool rehabilitation”).", "Rehabilitation", "Anna Summer", "Pool", formatter.parse("05-06-2021 15:00"), 1);
+                Treatment treatment5 = new Treatment(5, "Pool rehabilitation”.", "Rehabilitation", "Anna Summer", "Pool", formatter.parse("09-06-2021 15:00"), 1);
                 treatment5.timeTable.put(DayOfWeek.Wednesday, 15);
-                Treatment treatment6 = new Treatment(6, "Gym rehabilitation", "Rehabilitation", "Liz Taylor", "Gym", formatter.parse("05-06-2021 15:00"), 1);
+                Treatment treatment6 = new Treatment(6, "Gym rehabilitation", "Rehabilitation", "Liz Taylor", "Gym", formatter.parse("09-06-2021 15:00"), 1);
                 treatment6.timeTable.put(DayOfWeek.Wednesday, 15);
-                Treatment treatment7 = new Treatment(7, "Dance movement psychotherapy", "Physiotherapy", "Adam Lever", "Medical consulting suite B", formatter.parse("05-06-2021 16:00"), 1);
+                Treatment treatment7 = new Treatment(7, "Dance movement psychotherapy", "Physiotherapy", "Adam Lever", "Medical consulting suite B", formatter.parse("09-06-2021 16:00"), 1);
                 treatment7.timeTable.put(DayOfWeek.Wednesday, 16);
-                Treatment treatment8 = new Treatment(8, "Muscle treatment", "Osteopathy", "Lucas Mayor", "Medical consulting suite C", formatter.parse("07-06-2021 12:00"), 1);
+                Treatment treatment8 = new Treatment(8, "Muscle treatment", "Osteopathy", "Lucas Mayor", "Medical consulting suite C", formatter.parse("11-06-2021 12:00"), 1);
                 treatment8.timeTable.put(DayOfWeek.Friday, 12);
-                Treatment treatment9 = new Treatment(9, "Knee injury", "Rehabilitation", "Anna Summer", "Medical consulting suite A", formatter.parse("11-06-2021 11:00"), 1);
+                Treatment treatment9 = new Treatment(9, "Knee injury", "Rehabilitation", "Anna Summer", "Medical consulting suite A", formatter.parse("14-06-2021 11:00"), 1);
                 treatment9.timeTable.put(DayOfWeek.Monday, 11);
-                Treatment treatment10 = new Treatment(10, "Back pain", "Physiotherapy", "Tim Sawyer", "Gym", formatter.parse("04-06-2021 11:00"), 1);
+                Treatment treatment10 = new Treatment(10, "Back pain", "Physiotherapy", "Tim Sawyer", "Gym", formatter.parse("15-06-2021 11:00"), 1);
                 treatment10.timeTable.put(DayOfWeek.Tuesday, 11);
-                Treatment treatment11 = new Treatment(11, "Spine correction", "Osteopathy", "Tony Stanton", "Medical consulting suite C", formatter.parse("07-07-2021 16:00"), 1);
+                Treatment treatment11 = new Treatment(11, "Spine correction", "Osteopathy", "Tony Stanton", "Medical consulting suite C", formatter.parse("09-07-2021 16:00"), 1);
                 treatment11.timeTable.put(DayOfWeek.Friday, 16);
-                Treatment treatment12 = new Treatment(12, "Neck correction", "Osteopathy", "Lucas Mayor", "Medical consulting suite C", formatter.parse("06-07-2021 12:00"), 1);
+                Treatment treatment12 = new Treatment(12, "Neck correction", "Osteopathy", "Lucas Mayor", "Medical consulting suite C", formatter.parse("15-07-2021 12:00"), 1);
                 treatment12.timeTable.put(DayOfWeek.Thursday, 12);
-                Treatment treatment13 = new Treatment(13, "Shoulder injury", "Rehabilitation", "Anna Summer", "Medical consulting suite A", formatter.parse("04-07-2021 11:00"), 1);
+                Treatment treatment13 = new Treatment(13, "Shoulder injury", "Rehabilitation", "Anna Summer", "Medical consulting suite A", formatter.parse("20-07-2021 11:00"), 1);
                 treatment13.timeTable.put(DayOfWeek.Tuesday, 11);
-                Treatment treatment14 = new Treatment(14, "Ankle injury", "Rehabilitation", "Liz Taylor", "Medical consulting suite A", formatter.parse("04-07-2021 12:00"), 1);
+                Treatment treatment14 = new Treatment(14, "Ankle injury", "Rehabilitation", "Liz Taylor", "Medical consulting suite A", formatter.parse("20-07-2021 12:00"), 1);
                 treatment14.timeTable.put(DayOfWeek.Tuesday, 12);
-                Treatment treatment15 = new Treatment(15, "Disc herniation", "Physiotherapy", "Adam Lever", "Medical consulting suite B", formatter.parse("04-07-2021 13:00"), 1);
+                Treatment treatment15 = new Treatment(15, "Disc herniation", "Physiotherapy", "Adam Lever", "Medical consulting suite B", formatter.parse("20-07-2021 13:00"), 1);
                 treatment15.timeTable.put(DayOfWeek.Tuesday, 13);
-                Treatment treatment16 = new Treatment(16, "Groin strain", "Physiotherapy", "Tim Sawyer", "Medical consulting suite B", formatter.parse("07-07-2021 12:00"), 1);
+                Treatment treatment16 = new Treatment(16, "Groin strain", "Physiotherapy", "Tim Sawyer", "Medical consulting suite B", formatter.parse("23-07-2021 12:00"), 1);
                 treatment16.timeTable.put(DayOfWeek.Friday, 12);
-                Treatment treatment17 = new Treatment(17, "Joint correction", "Osteopathy", "Lucas Mayor", "Medical consulting suite C", formatter.parse("07-07-2021 11:00"), 1);
+                Treatment treatment17 = new Treatment(17, "Joint correction", "Osteopathy", "Lucas Mayor", "Medical consulting suite C", formatter.parse("23-07-2021 11:00"), 1);
                 treatment17.timeTable.put(DayOfWeek.Friday, 13);
-                Treatment treatment18 = new Treatment(18, "Tennis elbow", "Rehabilitation", "Anna Summer", "Gym", formatter.parse("03-07-2021 11:00"), 1);
+                Treatment treatment18 = new Treatment(18, "Tennis elbow", "Rehabilitation", "Anna Summer", "Gym", formatter.parse("26-07-2021 11:00"), 1);
                 treatment18.timeTable.put(DayOfWeek.Monday, 11);
-                Treatment treatment19 = new Treatment(19, "Shoulder mobility", "Rehabilitation", "Liz Taylor", "Pool", formatter.parse("03-07-2021 11:00"), 1);
+                Treatment treatment19 = new Treatment(19, "Shoulder mobility", "Rehabilitation", "Liz Taylor", "Pool", formatter.parse("26-07-2021 11:00"), 1);
                 treatment19.timeTable.put(DayOfWeek.Monday, 12);
-                Treatment treatment20 = new Treatment(20, "Runners knee", "Physiotherapy", "Adam Lever", "Medical consulting suite B", formatter.parse("07-07-2021 11:00"), 1);
+                Treatment treatment20 = new Treatment(20, "Runners knee", "Physiotherapy", "Adam Lever", "Medical consulting suite B", formatter.parse("30-07-2021 11:00"), 1);
                 treatment20.timeTable.put(DayOfWeek.Friday, 11);
                 treatments.add(treatment1);
                 treatments.add(treatment2);

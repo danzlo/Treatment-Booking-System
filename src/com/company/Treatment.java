@@ -21,7 +21,6 @@ public class Treatment extends java.util.Observable {
     Date date;
     int volume;
     Set<Patient> registeredPatients = new HashSet();
-    Set<Patient> attendedPatients = new HashSet();
 
     public Treatment(
             int id,
@@ -41,6 +40,7 @@ public class Treatment extends java.util.Observable {
         this.volume = volume;
         timeTable = new HashMap<DayOfWeek, Integer>();
     }
+
 
     String registerPatient(Patient patient){
         if((this.volume - this.registeredPatients.size()) <= 0) {

@@ -5,7 +5,7 @@ import static com.company.Account.bookButton;
 import static com.company.Account.treatmentTable;
 import static com.company.Account.loggedInPatient;
 import static com.company.Login.persons;
-import static com.company.Account.msg;
+import static com.company.Account.message;
 import static com.company.Account.panel;
 import static com.company.Login.app;
 import static com.company.Login.treatments;
@@ -14,16 +14,12 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -37,8 +33,8 @@ public class Account extends JFrame implements java.util.Observer {
 
     public static JPanel panel;
     public static JTable treatmentTable;
-    public static JLabel msg;
-    public static Set<Treatment> allBookedTreatments = new HashSet<Treatment>();
+    public static JLabel message;
+    public static Set<Treatment> allBookedTreatments = new HashSet<>();
     public static Patient loggedInPatient;
     public static BookingsPanel bookingsPanel;
     public static MainPanel mainPanel;
@@ -48,7 +44,7 @@ public class Account extends JFrame implements java.util.Observer {
 
     public Account (Patient loggedInUser){
         super("Welcome " + loggedInUser.getFullName());
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
@@ -58,7 +54,7 @@ public class Account extends JFrame implements java.util.Observer {
             }
         });
 
-        setSize(800, 400);
+        setSize(1000, 500);
 
         for(Iterator<Treatment> iter = treatments.iterator(); iter.hasNext();){
             Treatment treatment = iter.next();
@@ -81,38 +77,23 @@ public class Account extends JFrame implements java.util.Observer {
         panel.add(bookingsPanel, "bookings");
         panel.add(apptsPanel, "appointments");
 
-        JMenuBar mb = new JMenuBar();                          //Menu
+        JMenuBar mb = new JMenuBar();
         setJMenuBar(mb);
         JMenu lookup = new JMenu("Look up");
         JMenuItem mainItem = new JMenuItem ("Find treatments");
-        mainItem.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cl.show(panel,"lookup");
-            }
-        });
+        mainItem.addActionListener(e -> cl.show(panel,"lookup"));
         lookup.add(mainItem);
         mb.add(lookup);
 
         JMenu bookings = new JMenu("Bookings");
         JMenuItem bookingItem = new JMenuItem ("My Bookings");
-        bookingItem.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cl.show(panel,"bookings");
-            }
-        });
+        bookingItem.addActionListener(e -> cl.show(panel,"bookings"));
         bookings.add(bookingItem);
         mb.add(bookings);
 
         JMenu appointments = new JMenu("Appointments");
         JMenuItem apptsItem = new JMenuItem ("Appointments with physicians");
-        apptsItem.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                cl.show(panel,"appointments");
-            }
-        });
+        apptsItem.addActionListener(e -> cl.show(panel,"appointments"));
         appointments.add(apptsItem);
         mb.add(appointments);
 
@@ -156,7 +137,7 @@ class MainPanel extends JPanel {
         JPanel panel2 =new JPanel();
         JLabel label2 = new JLabel("Physicians: ");
 
-        Map<String, Physician> physicians = new HashMap<String, Physician>();
+        Map<String, Physician> physicians = new HashMap<>();
 
         for (Iterator<Person> iter = persons.iterator(); iter.hasNext(); ) {
             Person physician = iter.next();
@@ -175,7 +156,7 @@ class MainPanel extends JPanel {
         lookupPanel.add(panel2);
 
         Object[][] rows = new String[treatments.size()][6];
-        String columns[]={"Code", "Treatment","Area","Capacity","Physician", "Schedule"};
+        String columns[]={"Code", "Treatment","Area","Volume","Physician", "Schedule"};
 
         Iterator<Treatment> iter = treatments.iterator();
         int index = 0;
@@ -200,7 +181,7 @@ class MainPanel extends JPanel {
         };
 
         treatmentTable = new JTable(model);
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
         treatmentTable.setRowSorter(sorter);
 
         JScrollPane sp = new JScrollPane(treatmentTable);
@@ -208,31 +189,27 @@ class MainPanel extends JPanel {
 
         /** Filter by physician
          */
-        physiciansList.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent arg0) {
-                if (!arg0.getValueIsAdjusting()) {
-                    String selectedPhysician = physiciansList.getSelectedValue().toString();
-                    treatmentTable.setRowSorter(sorter);
-                    RowFilter rf = null;
-                    try {
-                        rf = RowFilter.regexFilter(selectedPhysician);
-                    } catch (java.util.regex.PatternSyntaxException e) {
-                        return;
-                    }
-                    sorter.setRowFilter(rf);
+        physiciansList.addListSelectionListener(arg0 -> {
+            if (!arg0.getValueIsAdjusting()) {
+                String selectedPhysician = physiciansList.getSelectedValue().toString();
+                treatmentTable.setRowSorter(sorter);
+                RowFilter rf;
+                try {
+                    rf = RowFilter.regexFilter(selectedPhysician);
+                } catch (java.util.regex.PatternSyntaxException e) {
+                    return;
                 }
+                sorter.setRowFilter(rf);
             }
         });
 
         /**filter by area of expertise
          */
-        areasList.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent arg0) {
-                if (!arg0.getValueIsAdjusting()) {
-                    String selectedArea = areasList.getSelectedValue().toString();
-                    treatmentTable.setRowSorter(sorter);
-                    sorter.setRowFilter(RowFilter.regexFilter(selectedArea));
-                }
+        areasList.addListSelectionListener(arg0 -> {
+            if (!arg0.getValueIsAdjusting()) {
+                String selectedArea = areasList.getSelectedValue().toString();
+                treatmentTable.setRowSorter(sorter);
+                sorter.setRowFilter(RowFilter.regexFilter(selectedArea));
             }
         });
 
@@ -240,8 +217,8 @@ class MainPanel extends JPanel {
         add(sp);
 
 
-        msg = new JLabel("");
-        add(msg);
+        message = new JLabel("");
+        add(message);
 
         JPanel datePanel = new JPanel();
         datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.X_AXIS));
@@ -316,89 +293,85 @@ class MainPanel extends JPanel {
 
         /** booking a treatment
          */
-        bookButton.addActionListener(new ActionListener() {
+        bookButton.addActionListener(e -> {
+            try {
+                int selectedIndex = treatmentTable.getSelectedRow();
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm", Locale.ENGLISH);
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    int selectedIndex = treatmentTable.getSelectedRow();
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm", Locale.ENGLISH);
+                if(selectedIndex == -1){
+                    message.setForeground(Color.RED);
+                    message.setText("You haven't selected a treatment");
+                } else {
+                    Treatment bookedTreatment = null;
+                    int treatmentId = Integer.parseInt(treatmentTable.getValueAt(selectedIndex, 0).toString());
+                    Boolean treatmentExists = false;
+                    Boolean timeSlotBusy = false;
 
-                    if(selectedIndex == -1){
-                        msg.setForeground(Color.RED);
-                        msg.setText("You haven't selected a treatment");
-                    } else {
-                        Treatment bookedTreatment = null;
-                        int treatmentId = Integer.parseInt(treatmentTable.getValueAt(selectedIndex, 0).toString());
-                        Boolean treatmentExists = false;
-                        Boolean timeSlotBusy = false;
-
-                        for (Treatment treatment : treatments) {
-                            if(treatment.id == treatmentId){
-                                Date newTreatmentDate = formatter.parse(dateList.getSelectedItem().toString() + " " + treatment.timeTable.values().toArray()[0] + ":00");
-                                if(treatment.date.getDay() !=  newTreatmentDate.getDay()){
-                                    msg.setForeground(Color.RED);
-                                    msg.setText("This treatment is not available on this day");
-                                    return;
-                                }
-                                else {
-                                    if(!treatment.date.toString().equals(newTreatmentDate.toString())){
-                                        bookedTreatment = new Treatment(
-                                                treatments.size()+ allBookedTreatments.size() + 1,
-                                                treatment.name,
-                                                treatment.area,
-                                                treatment.physician,
-                                                treatment.place,
-                                                newTreatmentDate,
-                                                treatment.volume);
-                                    } else {
-                                        bookedTreatment = treatment;
-                                    }
-                                }
-                            }
-                        }
-
-                        for(Treatment treatment: allBookedTreatments){
-                            if(treatment.id == bookedTreatment.id){
-                                treatmentExists = true;
-                            }
-                        }
-
-                        for(Iterator<Treatment> iter = loggedInPatient.registeredTreatments.iterator(); iter.hasNext();){
-                            Treatment studentTreatment = iter.next();
-                            if(studentTreatment.id == bookedTreatment.id){
-                                msg.setForeground(Color.red);
-                                msg.setText("You already booked this treatment on this date. Please choose a different date.");
+                    for (Treatment treatment : treatments) {
+                        if(treatment.id == treatmentId){
+                            Date newTreatmentDate = formatter.parse(dateList.getSelectedItem().toString() + " " + treatment.timeTable.values().toArray()[0] + ":00");
+                            if(treatment.date.getDay() !=  newTreatmentDate.getDay()){
+                                message.setForeground(Color.RED);
+                                message.setText("This treatment is not available on this day");
                                 return;
                             }
-                            if(studentTreatment.date.toString().equals(bookedTreatment.date.toString())){
-                                timeSlotBusy = true;
+                            else {
+                                if(!treatment.date.toString().equals(newTreatmentDate.toString())){
+                                    bookedTreatment = new Treatment(
+                                            treatments.size()+ allBookedTreatments.size() + 1,
+                                            treatment.name,
+                                            treatment.area,
+                                            treatment.physician,
+                                            treatment.place,
+                                            newTreatmentDate,
+                                            treatment.volume);
+                                } else {
+                                    bookedTreatment = treatment;
+                                }
                             }
                         }
-                        if(timeSlotBusy){
-                            msg.setForeground(Color.red);
-                            msg.setText("You have another treatment at this time!");
+                    }
+
+                    for(Treatment treatment: allBookedTreatments){
+                        if(treatment.id == bookedTreatment.id){
+                            treatmentExists = true;
+                        }
+                    }
+
+                    for(Iterator<Treatment> iter1 = loggedInPatient.registeredTreatments.iterator(); iter1.hasNext();){
+                        Treatment studentTreatment = iter1.next();
+                        if(studentTreatment.id == bookedTreatment.id){
+                            message.setForeground(Color.red);
+                            message.setText("You already booked this treatment on this date. Please choose a different date.");
                             return;
                         }
-                        else if(!treatmentExists){
-                            allBookedTreatments.add(bookedTreatment);
+                        if(studentTreatment.date.toString().equals(bookedTreatment.date.toString())){
+                            timeSlotBusy = true;
                         }
-
-                        String notification = bookedTreatment.registerPatient(loggedInPatient);
-
-                        if(notification.equals("Treatment booked!")){
-                            loggedInPatient.bookTreatment(bookedTreatment);
-                            msg.setForeground(Color.green);
-                        } else{
-                            msg.setForeground(Color.red);
-                        }
-                        msg.setText(notification);
-                        panel.revalidate();
-                        panel.repaint();
                     }
-                } catch (ParseException ex) {
-                    Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    if(timeSlotBusy){
+                        message.setForeground(Color.red);
+                        message.setText("You have another treatment at this time!");
+                        return;
+                    }
+                    else if(!treatmentExists){
+                        allBookedTreatments.add(bookedTreatment);
+                    }
+
+                    String notification = bookedTreatment.registerPatient(loggedInPatient);
+
+                    if(notification.equals("Treatment booked!")){
+                        loggedInPatient.bookTreatment(bookedTreatment);
+                        message.setForeground(Color.green);
+                    } else{
+                        message.setForeground(Color.red);
+                    }
+                    message.setText(notification);
+                    panel.revalidate();
+                    panel.repaint();
                 }
+            } catch (ParseException ex) {
+                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
@@ -424,7 +397,7 @@ class BookingsPanel extends JPanel {
 
             bookedItem.setLayout(new BoxLayout(bookedItem, BoxLayout.X_AXIS));
             bookedItem.setLayout(new BoxLayout(bookedItem, BoxLayout.LINE_AXIS));
-            bookedItem.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+            bookedItem.setBorder(BorderFactory.createEmptyBorder(0, 12, 12, 12));
 
             JLabel treatmentId = new JLabel(String.valueOf(treatment.id));
             bookedItem.add(treatmentId);
@@ -449,53 +422,46 @@ class BookingsPanel extends JPanel {
 
             /** Attend treatment
              */
-            attendButton.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    JButton button = (JButton)e.getSource();
-                    JPanel panel = (JPanel)button.getParent();
-                    Component[] components = panel.getComponents();
-                    JLabel l = (JLabel)components[0];
-                    int treatmentId = Integer.parseInt(l.getText());
+            attendButton.addActionListener(e -> {
+                JButton button = (JButton)e.getSource();
+                JPanel panel = (JPanel)button.getParent();
+                Component[] components = panel.getComponents();
+                JLabel l = (JLabel)components[0];
+                int treatmentId1 = Integer.parseInt(l.getText());
 
-                    for(Treatment treatment: allBookedTreatments){
-                        if(treatment.id == treatmentId){
-                            loggedInPatient.attendTreatment(treatment);
-                        }
+                for(Treatment treatment1 : allBookedTreatments){
+                    if(treatment1.id == treatmentId1){
+                        loggedInPatient.attendTreatment(treatment1);
                     }
-                    panel.remove(6);
-                    panel.remove(6);
-                    panel.add(attendedLabel);
-                    panel.revalidate();
-                    panel.repaint();
-
                 }
+                panel.remove(7);
+                panel.remove(7);
+                panel.add(attendedLabel);
+                panel.revalidate();
+                panel.repaint();
+
             });
 
             /** Cancel treatment
              */
-            cancelButton.addActionListener(new ActionListener(){
+            cancelButton.addActionListener(e -> {
 
-                @Override
-                public void actionPerformed(ActionEvent e) {
+                JButton button = (JButton)e.getSource();
+                JPanel panel = (JPanel)button.getParent();
+                Component[] components = panel.getComponents();
+                JLabel l = (JLabel)components[0];
+                int treatmentId12 = Integer.parseInt(l.getText());
 
-                    JButton button = (JButton)e.getSource();
-                    JPanel panel = (JPanel)button.getParent();
-                    Component[] components = panel.getComponents();
-                    JLabel l = (JLabel)components[0];
-                    int treatmentId = Integer.parseInt(l.getText());
-
-                    for(Treatment treatment: allBookedTreatments){
-                        if(treatment.id == treatmentId){
-                            loggedInPatient.cancelTreatment(treatment);
-                            treatment.deletePatient(loggedInPatient);
-                            if(treatment.registeredPatients.size() == 0){
-                                allBookedTreatments.remove(treatment);
-                            }
-                            panel.removeAll();
-                            panel.revalidate();
-                            panel.repaint();
+                for(Treatment treatment12 : allBookedTreatments){
+                    if(treatment12.id == treatmentId12){
+                        loggedInPatient.cancelTreatment(treatment12);
+                        treatment12.deletePatient(loggedInPatient);
+                        if(treatment12.registeredPatients.size() == 0){
+                            allBookedTreatments.remove(treatment12);
                         }
+                        panel.removeAll();
+                        panel.revalidate();
+                        panel.repaint();
                     }
                 }
             });
@@ -507,7 +473,7 @@ class BookingsPanel extends JPanel {
 
 
 
-            bookedItem.add(Box.createRigidArea(new Dimension(10, 0)));
+            bookedItem.add(Box.createRigidArea(new Dimension(12, 0)));
 
 
             bookedTreatments.add(bookedItem);
@@ -518,7 +484,6 @@ class BookingsPanel extends JPanel {
 }
 
 class AppointmentsPanel extends JPanel {
-    JList physiciansList;
     JTable table;
     JLabel appointmentMsg;
     Map<String, Physician> physicians;
@@ -539,14 +504,14 @@ class AppointmentsPanel extends JPanel {
         panel1.add(label1);
         panel1.add(areasList);
 
-        JLabel timeLabel = new JLabel("Select time: ");
+        JLabel timeLabel = new JLabel("Choose time: ");
         panel1.add(timeLabel);
 
         JPanel timePanel = new JPanel();
         timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.X_AXIS));
-        String[] hrs = { "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20"};
+        String[] hrs = { "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"};
         JComboBox hrsList = new JComboBox(hrs);
-        String[] mins = {"00", "20", "40"};
+        String[] mins = {"00", "15", "30", "45", "60"};
         JComboBox minsList = new JComboBox(mins);
         timePanel.add(hrsList);
         timePanel.add(minsList);
@@ -666,7 +631,7 @@ class AppointmentsPanel extends JPanel {
 
         JPanel panel2 =new JPanel();
 
-        physicians = new HashMap<String, Physician>();
+        physicians = new HashMap<>();
 
         for (Iterator<Person> iter = persons.iterator(); iter.hasNext(); ) {
             Person physician = iter.next();
@@ -687,18 +652,16 @@ class AppointmentsPanel extends JPanel {
         }
         TableModel model = new DefaultTableModel(rows, columns);
         table = new JTable(model);
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
         table.setRowSorter(sorter);
         JScrollPane sp = new JScrollPane(table);
 
 
-        areasList.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent arg0) {
-                if (!arg0.getValueIsAdjusting()) {
-                    String filter = areasList.getSelectedValue().toString();
-                    table.setRowSorter(sorter);
-                    sorter.setRowFilter(RowFilter.regexFilter(filter));
-                }
+        areasList.addListSelectionListener(arg0 -> {
+            if (!arg0.getValueIsAdjusting()) {
+                String filter = areasList.getSelectedValue().toString();
+                table.setRowSorter(sorter);
+                sorter.setRowFilter(RowFilter.regexFilter(filter));
             }
         });
 
