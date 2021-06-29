@@ -60,11 +60,11 @@ public class PhysicianAccount extends JFrame implements java.util.Observer {
             }
         });
 
-        setSize(800, 600);
+        setSize(1000, 800);
 
-        this.allTreatments = Account.allBookedTreatments;
+        allTreatments = Account.allBookedTreatments;
 
-        this.loggedInPhysician = loggedInUser;
+        loggedInPhysician = loggedInUser;
 
         panel = new JPanel();
         cl = new CardLayout();
@@ -129,7 +129,7 @@ class PhysicianMainPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         Object[][] rows = new String[allTreatments.size()][6];
-        String columns[]={"Code", "Treatment","Area","Patients registered","Physician", "Date"};
+        String[] columns ={"Code", "Treatment","Area","Patients registered","Physician", "Date"};
 
 
         Iterator<Treatment> iter = allTreatments.iterator();
@@ -183,7 +183,7 @@ class MyTreatmentsPanel extends JPanel {
 
                 bookedItem.setLayout(new BoxLayout(bookedItem, BoxLayout.X_AXIS));
                 bookedItem.setLayout(new BoxLayout(bookedItem, BoxLayout.LINE_AXIS));
-                bookedItem.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+                bookedItem.setBorder(BorderFactory.createEmptyBorder(0, 12, 12, 12));
 
                 JLabel lessonId = new JLabel(String.valueOf(lesson.id));
                 bookedItem.add(lessonId);
@@ -200,7 +200,7 @@ class MyTreatmentsPanel extends JPanel {
 
                 bookedItem.add(Box.createHorizontalGlue());
 
-                JButton cancelButton = new JButton("cancel");
+                JButton cancelButton = new JButton("Cancel");
                 bookedItem.add(cancelButton);
 
                 cancelButton.addActionListener(e -> {
@@ -228,7 +228,7 @@ class MyTreatmentsPanel extends JPanel {
                 });
 
 
-                bookedItem.add(Box.createRigidArea(new Dimension(10, 0)));
+                bookedItem.add(Box.createRigidArea(new Dimension(12, 0)));
 
 
                 bookedTreatments.add(bookedItem);
@@ -247,19 +247,18 @@ class PhysicianAppointmentsPanel extends JPanel {
         super();
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-        JPanel panel2 =new JPanel();
+        JPanel panelnr2 =new JPanel();
 
         physicians = new HashMap<>();
 
-        for (Iterator<Person> iter = Login.persons.iterator(); iter.hasNext(); ) {
-            Person physician = iter.next();
-            if(Physician.class.isInstance(physician)){
-                physicians.put(physician.getFullName(), (Physician)physician);
+        for (Person physician : Login.persons) {
+            if (physician instanceof Physician) {
+                physicians.put(physician.getFullName(), (Physician) physician);
             }
         }
 
         Object[][] rows = new String[physicians.size()][3];
-        String columns[]={"Area", "Physician", "Available"};
+        String[] columns ={"Area", "Physician", "Available"};
         int index = 0;
 
         for(Physician physician: physicians.values()){
@@ -276,7 +275,7 @@ class PhysicianAppointmentsPanel extends JPanel {
 
 
         add(sp);
-        add(panel2);
+        add(panelnr2);
     }
 }
 
@@ -298,7 +297,7 @@ class MyAppointmentsPanel extends JPanel {
 
             appointmentItem.setLayout(new BoxLayout(appointmentItem, BoxLayout.X_AXIS));
             appointmentItem.setLayout(new BoxLayout(appointmentItem, BoxLayout.LINE_AXIS));
-            appointmentItem.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+            appointmentItem.setBorder(BorderFactory.createEmptyBorder(0, 12, 12, 12));
 
             JLabel appointmentId = new JLabel(Integer.toString(appointment.id));
             appointmentItem.add(appointmentId);
@@ -315,7 +314,7 @@ class MyAppointmentsPanel extends JPanel {
 
             appointmentItem.add(Box.createHorizontalGlue());
 
-            JButton cancelButton = new JButton("cancel");
+            JButton cancelButton = new JButton("Cancel");
             appointmentItem.add(cancelButton);
 
             cancelButton.addActionListener(e -> {

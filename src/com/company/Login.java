@@ -6,7 +6,6 @@ import java.awt.event.ItemEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
@@ -56,7 +55,7 @@ import javax.swing.*;
             CardLayout cl = new CardLayout();
             panel.setLayout(cl);
 
-            /** LOGIN PANEL */
+            /** LOG IN PANEL */
 
             JPanel innerLoginPanel = new JPanel();
             innerLoginPanel.setLayout(new BoxLayout(innerLoginPanel, BoxLayout.PAGE_AXIS));
@@ -79,10 +78,10 @@ import javax.swing.*;
             panelLogin.add(innerLoginPanel, BorderLayout.NORTH);
 
             panelLogin.add(switchToRegister, BorderLayout.SOUTH);
-            /**End of login panel*/
+            /**End of log in panel*/
 
 
-            /**REGISTER PANEL*/
+            /**REGISTRATION PANEL*/
             JPanel innerRegisterPanel = new JPanel();
             innerRegisterPanel.setLayout(new BoxLayout(innerRegisterPanel, BoxLayout.PAGE_AXIS));
 
@@ -112,7 +111,7 @@ import javax.swing.*;
                 if(e.getStateChange() == ItemEvent.SELECTED){
 
                     areaLabel = new JLabel("Area of expertise: ");
-                    Area areas[]= {Area.Physiotherapy, Area.Osteopathy, Area.Rehabilitation};
+                    Area[] areas = {Area.Physiotherapy, Area.Osteopathy, Area.Rehabilitation};
                     areaCombo = new JComboBox(areas);
                     areaCombo.setSelectedIndex(2);
                     areaCombo.setAlignmentX(0);
@@ -151,19 +150,14 @@ import javax.swing.*;
 
             panelRegister.add(switchToLogin, BorderLayout.SOUTH);
 
-            /**adding login and register panels to the main  panel*/
+            /** adding login and register panels to the main  panel */
 
             panel.add(panelLogin, "Login");
             panel.add(panelRegister, "Register");
 
-            /**switching between login and register*/
+            /** switching between login and register */
 
-            switchToRegister.addActionListener(new ActionListener(){
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    cl.show(panel, "Register");
-                }
-            });
+            switchToRegister.addActionListener(e -> cl.show(panel, "Register"));
 
             switchToLogin.addActionListener(e -> cl.show(panel, "Login"));
 
@@ -304,10 +298,10 @@ import javax.swing.*;
                             return;
                         }
 
-                        loginMsg.setText("Id is not found");
+                        loginMsg.setText("The Id is not found");
 
                     } catch(NumberFormatException ex) {
-                        loginMsg.setText("Id is in the incorrect format");
+                        loginMsg.setText("The Id is in the incorrect format");
                     }
                 }
                 else {
@@ -317,7 +311,7 @@ import javax.swing.*;
                     if(fullName.isEmpty()){
                         registrationMsg.setText("Full name is required");
                     }else if(fullAddress.isEmpty()){
-                        registrationMsg.setText("Address is required");
+                        registrationMsg.setText(" Full address is required");
                     } else{
                         try{
                             Long.parseLong(phoneNumberText.getText());
@@ -341,9 +335,8 @@ import javax.swing.*;
         }
 
         Person findPersonById(int id) {
-            for (Iterator<Person> iter = persons.iterator(); iter.hasNext(); ) {
-                Person loggedInPerson = iter.next();
-                if(loggedInPerson.getId() == id){
+            for (Person loggedInPerson : persons) {
+                if (loggedInPerson.getId() == id) {
                     return loggedInPerson;
                 }
             }

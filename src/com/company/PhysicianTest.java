@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -46,7 +47,7 @@ public class PhysicianTest {
          * Test of bookAppointment method, of class Physician.
          */
         @Test
-        public void testBookAppointment() {
+        public void testBookAnAppointment() {
             Date date = new Date();
             int hrs = 9;
             int mins = 30;
@@ -62,7 +63,7 @@ public class PhysicianTest {
         }
 
         @Test
-        public void testBookAppointmentWrongDay() {
+        public void testBookAppointmentIncorrectDay() {
             SimpleDateFormat formatter = new SimpleDateFormat(
                     "dd-M-yyyy hh:mm",
                     Locale.ENGLISH
@@ -87,7 +88,7 @@ public class PhysicianTest {
         }
 
         @Test
-        public void testCancelAppointment() {
+        public void testCancelAnAppointment() {
             SimpleDateFormat formatter = new SimpleDateFormat(
                     "dd-M-yyyy hh:mm",
                     Locale.ENGLISH

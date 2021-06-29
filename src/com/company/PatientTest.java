@@ -37,7 +37,7 @@ public class PatientTest {
      * Test bookTreatment method, of class Patient.
      */
     @Test
-    public void testBookTreatment() {
+    public void testBookATreatment() {
         Patient patient = new Patient(
                 "Marin S Hammond",
                 "1 Bohemia Rd. Clarksburg, WV 26301",
@@ -60,7 +60,7 @@ public class PatientTest {
      * Test of attendTreatment method, of class Patient.
      */
     @Test
-    public void testAttendTreatment() {
+    public void testAttendATreatment() {
         Patient patient = new Patient(
                 "Marin S Hammond",
                 "1 Bohemia Rd. Clarksburg, WV 26301",
@@ -81,7 +81,7 @@ public class PatientTest {
     }
 
     @Test
-    public void testCancelTreatment() {
+    public void testCancelATreatment() {
         Patient patient = new Patient(
                 "Marin S Hammond",
                 "1 Bohemia Rd. Clarksburg, WV 26301",

@@ -25,7 +25,6 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 /**
- *
  * @author danzlo
  */
 
@@ -56,13 +55,12 @@ public class Account extends JFrame implements java.util.Observer {
 
         setSize(1000, 500);
 
-        for(Iterator<Treatment> iter = treatments.iterator(); iter.hasNext();){
-            Treatment treatment = iter.next();
+        for (Treatment treatment : treatments) {
             treatment.addObserver(this);
         }
 
 
-        this.loggedInPatient = loggedInUser;
+        loggedInPatient = loggedInUser;
         loggedInPatient.addObserver(this);
 
         panel = new JPanel();
@@ -73,27 +71,27 @@ public class Account extends JFrame implements java.util.Observer {
         bookingsPanel = new BookingsPanel();
         AppointmentsPanel apptsPanel = new AppointmentsPanel();
 
-        panel.add(mainPanel, "lookup");
-        panel.add(bookingsPanel, "bookings");
-        panel.add(apptsPanel, "appointments");
+        panel.add(mainPanel, "Look up");
+        panel.add(bookingsPanel, "Bookings");
+        panel.add(apptsPanel, "Appointments");
 
         JMenuBar mb = new JMenuBar();
         setJMenuBar(mb);
         JMenu lookup = new JMenu("Look up");
         JMenuItem mainItem = new JMenuItem ("Find treatments");
-        mainItem.addActionListener(e -> cl.show(panel,"lookup"));
+        mainItem.addActionListener(e -> cl.show(panel,"Look up"));
         lookup.add(mainItem);
         mb.add(lookup);
 
         JMenu bookings = new JMenu("Bookings");
         JMenuItem bookingItem = new JMenuItem ("My Bookings");
-        bookingItem.addActionListener(e -> cl.show(panel,"bookings"));
+        bookingItem.addActionListener(e -> cl.show(panel,"Bookings"));
         bookings.add(bookingItem);
         mb.add(bookings);
 
         JMenu appointments = new JMenu("Appointments");
         JMenuItem apptsItem = new JMenuItem ("Appointments with physicians");
-        apptsItem.addActionListener(e -> cl.show(panel,"appointments"));
+        apptsItem.addActionListener(e -> cl.show(panel,"Appointments"));
         appointments.add(apptsItem);
         mb.add(appointments);
 
@@ -105,10 +103,10 @@ public class Account extends JFrame implements java.util.Observer {
     @Override
     public void update(Observable o, Object arg) {
         mainPanel = new MainPanel();
-        panel.add(mainPanel, "lookup");
+        panel.add(mainPanel, "Look up");
         bookingsPanel = new BookingsPanel();
-        panel.add(bookingsPanel, "bookings");
-        cl.show(panel, "lookup");
+        panel.add(bookingsPanel, "Bookings");
+        cl.show(panel, "Look up");
     }
 }
 
@@ -120,43 +118,41 @@ class MainPanel extends JPanel {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        JPanel panel1 =new JPanel();
+        JPanel panelnr1 =new JPanel();
 
-        /**areas of expertise
-         */
+        /** areas of expertise */
         JLabel label = new JLabel("Area of expertise: ");
         String areas[] = { "Physiotherapy","Osteopathy","Rehabilitation"};
         
 
         JList areasList = new JList(areas);
-        panel1.add(label);
-        panel1.add(areasList);
+        panelnr1.add(label);
+        panelnr1.add(areasList);
 
-        /**physicians by name
-         */
-        JPanel panel2 =new JPanel();
+        /** physicians by name */
+        
+        JPanel panelnr2 =new JPanel();
         JLabel label2 = new JLabel("Physicians: ");
 
         Map<String, Physician> physicians = new HashMap<>();
 
-        for (Iterator<Person> iter = persons.iterator(); iter.hasNext(); ) {
-            Person physician = iter.next();
-            if(Physician.class.isInstance(physician)){
-                physicians.put(physician.getFullName(), (Physician)physician);
+        for (Person physician : persons) {
+            if (physician instanceof Physician) {
+                physicians.put(physician.getFullName(), (Physician) physician);
             }
         }
         JList physiciansList = new JList(physicians.keySet().toArray());
 
-        panel2.add(label2);
-        panel2.add(physiciansList);
+        panelnr2.add(label2);
+        panelnr2.add(physiciansList);
 
         JPanel lookupPanel = new JPanel();
         lookupPanel.setLayout(new BoxLayout(lookupPanel, BoxLayout.X_AXIS));
-        lookupPanel.add(panel1);
-        lookupPanel.add(panel2);
+        lookupPanel.add(panelnr1);
+        lookupPanel.add(panelnr2);
 
         Object[][] rows = new String[treatments.size()][6];
-        String columns[]={"Code", "Treatment","Area","Volume","Physician", "Schedule"};
+        String[] columns ={"Code", "Treatment", "Area", "Volume", "Physician", "Schedule"};
 
         Iterator<Treatment> iter = treatments.iterator();
         int index = 0;
@@ -187,8 +183,8 @@ class MainPanel extends JPanel {
         JScrollPane sp = new JScrollPane(treatmentTable);
 
 
-        /** Filter by physician
-         */
+        /** Filter by physician */
+
         physiciansList.addListSelectionListener(arg0 -> {
             if (!arg0.getValueIsAdjusting()) {
                 String selectedPhysician = physiciansList.getSelectedValue().toString();
@@ -203,8 +199,7 @@ class MainPanel extends JPanel {
             }
         });
 
-        /**filter by area of expertise
-         */
+        /** filter by area of expertise */
         areasList.addListSelectionListener(arg0 -> {
             if (!arg0.getValueIsAdjusting()) {
                 String selectedArea = areasList.getSelectedValue().toString();
@@ -223,67 +218,17 @@ class MainPanel extends JPanel {
         JPanel datePanel = new JPanel();
         datePanel.setLayout(new BoxLayout(datePanel, BoxLayout.X_AXIS));
         String[] dates = {
-                "01-06-2021",
-                "02-06-2021",
-                "03-06-2021",
-                "04-06-2021",
-                "05-06-2021",
-                "06-06-2021",
-                "07-06-2021",
-                "08-06-2021",
-                "09-06-2021",
-                "10-06-2021",
-                "11-06-2021",
-                "12-06-2021",
-                "13-06-2021",
-                "14-06-2021",
-                "15-06-2021",
-                "16-06-2021",
-                "17-06-2021",
-                "18-06-2021",
-                "19-06-2021",
-                "20-06-2021",
-                "21-06-2021",
-                "22-06-2021",
-                "23-06-2021",
-                "24-06-2021",
-                "25-06-2021",
-                "26-06-2021",
-                "27-06-2021",
-                "28-06-2021",
-                "29-06-2021",
-                "30-06-2021",
-                "01-07-2021",
-                "02-07-2021",
-                "03-07-2021",
-                "04-07-2021",
-                "05-07-2021",
-                "06-07-2021",
-                "07-07-2021",
-                "08-07-2021",
-                "09-07-2021",
-                "10-07-2021",
-                "11-07-2021",
-                "12-07-2021",
-                "13-07-2021",
-                "14-07-2021",
-                "15-07-2021",
-                "16-07-2021",
-                "17-07-2021",
-                "18-07-2021",
-                "19-07-2021",
-                "20-07-2021",
-                "21-07-2021",
-                "22-07-2021",
-                "23-07-2021",
-                "24-07-2021",
-                "25-07-2021",
-                "26-07-2021",
-                "27-07-2021",
-                "28-07-2021",
-                "29-07-2021",
-                "30-07-2021",
-                "31-07-2021"
+                "01-06-2021", "02-06-2021", "03-06-2021", "04-06-2021", "05-06-2021", "06-06-2021", "07-06-2021",
+                "08-06-2021", "09-06-2021", "10-06-2021", "11-06-2021", "12-06-2021", "13-06-2021", "14-06-2021",
+                "15-06-2021", "16-06-2021", "17-06-2021", "18-06-2021", "19-06-2021", "20-06-2021", "21-06-2021",
+                "22-06-2021", "23-06-2021", "24-06-2021", "25-06-2021", "26-06-2021", "27-06-2021", "28-06-2021",
+                "29-06-2021", "30-06-2021",
+                
+                "01-07-2021", "02-07-2021", "03-07-2021", "04-07-2021", "05-07-2021", "06-07-2021", "07-07-2021", 
+                "08-07-2021", "09-07-2021", "10-07-2021", "11-07-2021", "12-07-2021", "13-07-2021", "14-07-2021",
+                "15-07-2021", "16-07-2021", "17-07-2021", "18-07-2021", "19-07-2021", "20-07-2021", "21-07-2021",
+                "22-07-2021", "23-07-2021", "24-07-2021", "25-07-2021", "26-07-2021", "27-07-2021", "28-07-2021",
+                "29-07-2021", "30-07-2021", "31-07-2021"
 
         };
         dateList = new JComboBox(dates);
@@ -291,25 +236,24 @@ class MainPanel extends JPanel {
 
         bookButton = new JButton("Book treatment");
 
-        /** booking a treatment
-         */
+        /** booking a treatment */
         bookButton.addActionListener(e -> {
             try {
                 int selectedIndex = treatmentTable.getSelectedRow();
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy hh:mm", Locale.ENGLISH);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm", Locale.ENGLISH);
 
                 if(selectedIndex == -1){
                     message.setForeground(Color.RED);
-                    message.setText("You haven't selected a treatment");
+                    message.setText("You have not selected a treatment");
                 } else {
                     Treatment bookedTreatment = null;
                     int treatmentId = Integer.parseInt(treatmentTable.getValueAt(selectedIndex, 0).toString());
-                    Boolean treatmentExists = false;
-                    Boolean timeSlotBusy = false;
+                    boolean treatmentExists = false;
+                    boolean timeSlotBusy = false;
 
                     for (Treatment treatment : treatments) {
                         if(treatment.id == treatmentId){
-                            Date newTreatmentDate = formatter.parse(dateList.getSelectedItem().toString() + " " + treatment.timeTable.values().toArray()[0] + ":00");
+                            Date newTreatmentDate = formatter.parse(Objects.requireNonNull(dateList.getSelectedItem()).toString() + " " + treatment.timeTable.values().toArray()[0] + ":00");
                             if(treatment.date.getDay() !=  newTreatmentDate.getDay()){
                                 message.setForeground(Color.RED);
                                 message.setText("This treatment is not available on this day");
@@ -333,31 +277,34 @@ class MainPanel extends JPanel {
                     }
 
                     for(Treatment treatment: allBookedTreatments){
-                        if(treatment.id == bookedTreatment.id){
+                        assert bookedTreatment != null;
+                        if (treatment.id == bookedTreatment.id) {
                             treatmentExists = true;
+                            break;
                         }
                     }
 
-                    for(Iterator<Treatment> iter1 = loggedInPatient.registeredTreatments.iterator(); iter1.hasNext();){
-                        Treatment studentTreatment = iter1.next();
-                        if(studentTreatment.id == bookedTreatment.id){
+                    for (Treatment patientTreatment : loggedInPatient.registeredTreatments) {
+                        assert bookedTreatment != null;
+                        if (patientTreatment.id == bookedTreatment.id) {
                             message.setForeground(Color.red);
                             message.setText("You already booked this treatment on this date. Please choose a different date.");
                             return;
                         }
-                        if(studentTreatment.date.toString().equals(bookedTreatment.date.toString())){
+                        if (patientTreatment.date.toString().equals(bookedTreatment.date.toString())) {
                             timeSlotBusy = true;
                         }
                     }
                     if(timeSlotBusy){
                         message.setForeground(Color.red);
-                        message.setText("You have another treatment at this time!");
+                        message.setText("You have another treatment booked at this time.");
                         return;
                     }
                     else if(!treatmentExists){
                         allBookedTreatments.add(bookedTreatment);
                     }
 
+                    assert bookedTreatment != null;
                     String notification = bookedTreatment.registerPatient(loggedInPatient);
 
                     if(notification.equals("Treatment booked!")){
@@ -397,7 +344,7 @@ class BookingsPanel extends JPanel {
 
             bookedItem.setLayout(new BoxLayout(bookedItem, BoxLayout.X_AXIS));
             bookedItem.setLayout(new BoxLayout(bookedItem, BoxLayout.LINE_AXIS));
-            bookedItem.setBorder(BorderFactory.createEmptyBorder(0, 12, 12, 12));
+            bookedItem.setBorder(BorderFactory.createEmptyBorder(0, 13, 13, 13));
 
             JLabel treatmentId = new JLabel(String.valueOf(treatment.id));
             bookedItem.add(treatmentId);
@@ -413,15 +360,14 @@ class BookingsPanel extends JPanel {
             bookedItem.add(treatmentDate);
 
             bookedItem.add(Box.createHorizontalGlue());
-            JLabel attendedLabel = new JLabel("attended");
+            JLabel attendedLabel = new JLabel("Attended");
             attendedLabel.setForeground(Color.green);
 
-            JButton attendButton = new JButton("attend");
-            JButton cancelButton = new JButton("cancel");
+            JButton attendButton = new JButton("Attend");
+            JButton cancelButton = new JButton("Cancel");
 
 
-            /** Attend treatment
-             */
+            /** Attend treatment */
             attendButton.addActionListener(e -> {
                 JButton button = (JButton)e.getSource();
                 JPanel panel = (JPanel)button.getParent();
@@ -434,16 +380,15 @@ class BookingsPanel extends JPanel {
                         loggedInPatient.attendTreatment(treatment1);
                     }
                 }
-                panel.remove(7);
-                panel.remove(7);
+                panel.remove(8);
+                panel.remove(8);
                 panel.add(attendedLabel);
                 panel.revalidate();
                 panel.repaint();
 
             });
 
-            /** Cancel treatment
-             */
+            /** Cancel treatment */
             cancelButton.addActionListener(e -> {
 
                 JButton button = (JButton)e.getSource();
@@ -465,17 +410,12 @@ class BookingsPanel extends JPanel {
                     }
                 }
             });
-
-
-
+            
             bookedItem.add(attendButton);
             bookedItem.add(cancelButton);
-
-
-
-            bookedItem.add(Box.createRigidArea(new Dimension(12, 0)));
-
-
+            
+            bookedItem.add(Box.createRigidArea(new Dimension(13, 0)));
+            
             bookedTreatments.add(bookedItem);
         }
 
@@ -494,117 +434,66 @@ class AppointmentsPanel extends JPanel {
         super();
         setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-        JPanel panel1 =new JPanel();
-        panel1.setLayout(new BoxLayout(panel1, BoxLayout.Y_AXIS));
+        JPanel panelnr1 =new JPanel();
+        panelnr1.setLayout(new BoxLayout(panelnr1, BoxLayout.Y_AXIS));
         JLabel label1 = new JLabel("Area of expertise: ");
-        String areas[] = { "Physiotherapy","Osteopathy","Rehabilitation"};
+        String[] areas = { "Physiotherapy","Osteopathy","Rehabilitation"};
 
         JList areasList = new JList(areas);
 
-        panel1.add(label1);
-        panel1.add(areasList);
+        panelnr1.add(label1);
+        panelnr1.add(areasList);
 
         JLabel timeLabel = new JLabel("Choose time: ");
-        panel1.add(timeLabel);
+        panelnr1.add(timeLabel);
 
         JPanel timePanel = new JPanel();
         timePanel.setLayout(new BoxLayout(timePanel, BoxLayout.X_AXIS));
         String[] hrs = { "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21"};
         JComboBox hrsList = new JComboBox(hrs);
-        String[] mins = {"00", "15", "30", "45", "60"};
-        JComboBox minsList = new JComboBox(mins);
+        String[] min = {"00", "15", "30", "45", "60"};
+        JComboBox minList = new JComboBox(min);
         timePanel.add(hrsList);
-        timePanel.add(minsList);
-        panel1.add(timePanel);
+        timePanel.add(minList);
+        panelnr1.add(timePanel);
 
         JLabel dateLabel = new JLabel("Select date: ");
-        panel1.add(dateLabel);
+        panelnr1.add(dateLabel);
         String[] dates = {
-                "01-06-2021",
-                "02-06-2021",
-                "03-06-2021",
-                "04-06-2021",
-                "05-06-2021",
-                "06-06-2021",
-                "07-06-2021",
-                "08-06-2021",
-                "09-06-2021",
-                "10-06-2021",
-                "11-06-2021",
-                "12-06-2021",
-                "13-06-2021",
-                "14-06-2021",
-                "15-06-2021",
-                "16-06-2021",
-                "17-06-2021",
-                "18-06-2021",
-                "19-06-2021",
-                "20-06-2021",
-                "21-06-2021",
-                "22-06-2021",
-                "23-06-2021",
-                "24-06-2021",
-                "25-06-2021",
-                "26-06-2021",
-                "27-06-2021",
-                "28-06-2021",
-                "29-06-2021",
-                "30-06-2021",
-                "01-07-2021",
-                "02-07-2021",
-                "03-07-2021",
-                "04-07-2021",
-                "05-07-2021",
-                "06-07-2021",
-                "07-07-2021",
-                "08-07-2021",
-                "09-07-2021",
-                "10-07-2021",
-                "11-07-2021",
-                "12-07-2021",
-                "13-07-2021",
-                "14-07-2021",
-                "15-07-2021",
-                "16-07-2021",
-                "17-07-2021",
-                "18-07-2021",
-                "19-07-2021",
-                "20-07-2021",
-                "21-07-2021",
-                "22-07-2021",
-                "23-07-2021",
-                "24-07-2021",
-                "25-07-2021",
-                "26-07-2021",
-                "27-07-2021",
-                "28-07-2021",
-                "29-07-2021",
-                "30-07-2021",
-                "31-07-2021"
+                "01-06-2021", "02-06-2021", "03-06-2021", "04-06-2021", "05-06-2021", "06-06-2021", "07-06-2021",
+                "08-06-2021", "09-06-2021", "10-06-2021", "11-06-2021", "12-06-2021", "13-06-2021", "14-06-2021",
+                "15-06-2021", "16-06-2021", "17-06-2021", "18-06-2021", "19-06-2021", "20-06-2021", "21-06-2021",
+                "22-06-2021", "23-06-2021", "24-06-2021", "25-06-2021", "26-06-2021", "27-06-2021", "28-06-2021",
+                "29-06-2021", "30-06-2021",
+
+                "01-07-2021", "02-07-2021", "03-07-2021", "04-07-2021", "05-07-2021", "06-07-2021", "07-07-2021",
+                "08-07-2021", "09-07-2021", "10-07-2021", "11-07-2021", "12-07-2021", "13-07-2021", "14-07-2021",
+                "15-07-2021", "16-07-2021", "17-07-2021", "18-07-2021", "19-07-2021", "20-07-2021", "21-07-2021",
+                "22-07-2021", "23-07-2021", "24-07-2021", "25-07-2021", "26-07-2021", "27-07-2021", "28-07-2021",
+                "29-07-2021", "30-07-2021", "31-07-2021"
         };
         datesList = new JComboBox(dates);
-        panel1.add(datesList);
-
-
-
+        panelnr1.add(datesList);
+        
         JLabel visitorLabel = new JLabel("Enter your name: ");
-        panel1.add(visitorLabel);
+        panelnr1.add(visitorLabel);
 
         visitorText = new JTextField();
-        panel1.add(visitorText);
+        panelnr1.add(visitorText);
 
         appointmentMsg = new JLabel(" ");
-        panel1.add(appointmentMsg);
+        panelnr1.add(appointmentMsg);
 
         JButton bookAptBtn = new JButton("Book appointment");
         bookAptBtn.addActionListener(e -> {
 
-            Integer hrs1 = Integer.parseInt(hrsList.getSelectedItem().toString());
-            Integer mins1 = Integer.parseInt(minsList.getSelectedItem().toString());
-            String date = datesList.getSelectedItem().toString();
+            Integer hrs1 = Integer.parseInt(Objects.requireNonNull(hrsList.getSelectedItem()).toString());
+            Integer min1 = Integer.parseInt(Objects.requireNonNull(minList.getSelectedItem()).toString());
+            String date = Objects.requireNonNull(datesList.getSelectedItem()).toString();
             int selectedIndex = table.getSelectedRow();
+            
             try {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
+                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
                 Date apptDate = formatter.parse(date + " 10:00");
 
                 if(selectedIndex == -1){
@@ -617,7 +506,7 @@ class AppointmentsPanel extends JPanel {
 
                     for(Physician physician: physicians.values()){
                         if(physician.getFullName() == physicianName){
-                            appointmentMsg.setText(physician.bookAppointment(apptDate, hrs1, mins1, visitorText.getText()));
+                            appointmentMsg.setText(physician.bookAppointment(apptDate, hrs1, min1, visitorText.getText()));
                         }
                     }
                 }
@@ -627,21 +516,20 @@ class AppointmentsPanel extends JPanel {
         });
 
 
-        panel1.add(bookAptBtn);
+        panelnr1.add(bookAptBtn);
 
-        JPanel panel2 =new JPanel();
+        JPanel panelnr2 =new JPanel();
 
         physicians = new HashMap<>();
 
-        for (Iterator<Person> iter = persons.iterator(); iter.hasNext(); ) {
-            Person physician = iter.next();
-            if(Physician.class.isInstance(physician)){
-                physicians.put(physician.getFullName(), (Physician)physician);
+        for (Person physician : persons) {
+            if (physician instanceof Physician) {
+                physicians.put(physician.getFullName(), (Physician) physician);
             }
         }
 
         Object[][] rows = new String[physicians.size()][3];
-        String columns[]={"Area", "Physician", "Available"};
+        String[] columns ={"Area", "Physician", "Available"};
         int index = 0;
 
         for(Physician physician: physicians.values()){
@@ -666,8 +554,8 @@ class AppointmentsPanel extends JPanel {
         });
 
         add(sp);
-        add(panel1);
-        add(panel2);
+        add(panelnr1);
+        add(panelnr2);
     }
 }
 
